@@ -1,0 +1,13 @@
+[package]
+name = "ImageManager"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+image = "0.25.5"
+jpeg-decoder = "0.2"
+jpeg-encoder = "0.2"
+druid = "0.8.3"
+kamadak-exif = "0.6.1"
+egui = "0.30.0"
+eframe = "0.30.0"
