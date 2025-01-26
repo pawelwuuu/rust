@@ -14,4 +14,3 @@ fn main() -> Result<(), eframe::Error> {
         Box::new(|_cc| Ok(Box::new(MyApp::default()))),
     )
 }
-

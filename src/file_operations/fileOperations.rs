@@ -1,19 +1,19 @@
 use std::collections::HashMap;
 use std::fs;
 use std::fs::File;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::io::{self, Read};
 
-const IMAGE_EXTENSIONS: [&str; 2] = [".png", ".jpg"];
+const IMAGE_EXTENSIONS: [&str; 3] = [".png", ".jpg", ".jpeg"];
 
-
-fn get_file_paths_from_folder(path: &str) -> Vec<PathBuf> {
+fn get_file_paths_from_folder(path: &str) -> Result<Vec<PathBuf>, io::Error> {
     let mut file_paths = Vec::new();
 
-    let paths = fs::read_dir(path).unwrap();
+    let paths = fs::read_dir(path)?;
     for path in paths {
         match path {
-            Ok(path) => {
-                file_paths.push(path.path());
+            Ok(entry) => {
+                file_paths.push(entry.path());
             }
             Err(e) => {
                 println!("{:?}", e);
@@ -21,7 +21,7 @@ fn get_file_paths_from_folder(path: &str) -> Vec<PathBuf> {
         }
     }
 
-    file_paths
+    Ok(file_paths)
 }
 
 fn filter_images_from_folder(paths: Vec<PathBuf>) -> Vec<String> {
@@ -30,8 +30,8 @@ fn filter_images_from_folder(paths: Vec<PathBuf>) -> Vec<String> {
     for path in paths {
         let path_str = path.into_os_string().into_string().unwrap();
 
-        for imageExtension in IMAGE_EXTENSIONS.iter() {
-            if path_str.contains(imageExtension) {
+        for image_extension in IMAGE_EXTENSIONS.iter() {
+            if path_str.contains(image_extension) {
                 filtered_paths.push(path_str.clone());
                 break;
             }
@@ -41,16 +41,21 @@ fn filter_images_from_folder(paths: Vec<PathBuf>) -> Vec<String> {
     filtered_paths
 }
 
-fn load_files_from_folder(paths: Vec<String>) -> HashMap<String, File> {
+fn load_files_from_folder(paths: Vec<String>) -> Result<HashMap<String, File>, io::Error> {
     let mut files: HashMap<String, File> = HashMap::new();
 
     for path in paths {
-        files.insert(path.clone(), File::open(path.clone()).unwrap());
+        let file = File::open(&path)?;
+        files.insert(path.clone(), file);
     }
 
-    files
+    Ok(files)
 }
 
-pub fn get_workspace_files(path: &str) -> HashMap<String, File> {
-    load_files_from_folder(filter_images_from_folder(get_file_paths_from_folder(path)))
+pub fn get_workspace_files(path: &str) -> Result<HashMap<String, File>, io::Error> {
+    let file_paths = get_file_paths_from_folder(path)?;
+    let filtered_paths = filter_images_from_folder(file_paths);
+    let files = load_files_from_folder(filtered_paths)?;
+
+    Ok(files)
 }
