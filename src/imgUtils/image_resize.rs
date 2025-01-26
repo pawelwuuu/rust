@@ -8,18 +8,15 @@ pub fn resize_to_target_size(
     output_path: &str,
     target_size_mb: f64,
 ) -> Result<(), Box<dyn Error>> {
-    // Wczytaj obraz
     let mut img = image::open(input_path)?;
 
-    // Przelicz docelowy rozmiar w bajtach
-    let target_size_bytes = (target_size_mb * 1024.0 * 1024.0) as usize;
+    let target_size_bytes = (target_size_mb * 1024.0 * 1024.0) as usize;  //bytes target size
 
-    // Początkowe parametry
-    let mut quality = 90; // Początkowa jakość
+    // initial parameters
+    let mut quality = 90; // initial quality
     let mut resized_img = img.clone();
 
     loop {
-        // Bufor na zakodowany obraz
         let mut buffer = Cursor::new(Vec::new());
 
         // Rozpoznaj format na podstawie rozszerzenia
@@ -71,14 +68,14 @@ pub fn resize_to_target_size(
     Ok(())
 }
 
-// Funkcje do kodowania obrazów w różnych formatach
+// encoding stategies
 
 fn encode_as_jpeg(
     img: &DynamicImage,
     buffer: &mut Cursor<Vec<u8>>,
     quality: u8,
 ) -> Result<(), Box<dyn Error>> {
-    let rgb_image = img.to_rgb8(); // JPEG nie obsługuje przezroczystości
+    let rgb_image = img.to_rgb8();
     let mut encoder = jpeg_encoder::Encoder::new(buffer, quality);
     encoder.encode(
         &rgb_image,
@@ -94,7 +91,7 @@ fn encode_as_png(
     buffer: &mut Cursor<Vec<u8>>,
 ) -> Result<(), Box<dyn Error>> {
     let encoder = image::codecs::png::PngEncoder::new(buffer);
-    let rgba_image = img.to_rgba8(); // Zachowanie przezroczystości
+    let rgba_image = img.to_rgba8();
     encoder.write_image(
         &rgba_image,
         rgba_image.width(),
@@ -139,7 +136,7 @@ fn encode_as_tiff(
     buffer: &mut Cursor<Vec<u8>>,
 ) -> Result<(), Box<dyn Error>> {
     let encoder = image::codecs::tiff::TiffEncoder::new(buffer);
-    let rgba_image = img.to_rgba8(); // TIFF może obsługiwać przezroczystość
+    let rgba_image = img.to_rgba8();
     encoder.write_image(
         &rgba_image,
         rgba_image.width(),

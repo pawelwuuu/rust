@@ -8,17 +8,14 @@ pub fn resize_image_to_dimensions(
     new_width: u32,
     new_height: u32,
 ) -> Result<(), Box<dyn Error>> {
-    // Wczytaj obraz
     let img = image::open(input_path)?;
 
-    // Zmień rozmiar obrazu
     let resized_img = img.resize_exact(
         new_width,
         new_height,
         image::imageops::FilterType::Lanczos3, // Algorytm interpolacji
     );
 
-    // Zapisz obraz do pliku
     let output_file = File::create(output_path)?;
     let mut writer = BufWriter::new(output_file);
     resized_img.write_to(&mut writer, image::ImageFormat::from_path(output_path)?)?;
