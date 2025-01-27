@@ -376,7 +376,7 @@ impl eframe::App for MyApp {
                 for (filename, texture_id) in &self.thumbnails {
                     ui.vertical(|ui| {
                         ui.image(texture_id);
-                        ui.label(Path::new(filename).file_name().unwrap().to_str().unwrap());
+                        ui.label(get_last_17_chars(Path::new(filename).file_name().unwrap().to_str().unwrap()));
                         if (ui.checkbox( &mut self.selected_images[filename].clone(), "Zaznacz").clicked()) {
                             self.selected_images.insert(filename.clone(), !self.selected_images[filename]);
                         }
@@ -386,5 +386,13 @@ impl eframe::App for MyApp {
                 }
             });
         });
+    }
+}
+
+fn get_last_17_chars(s: &str) -> &str {
+    if s.len() > 17 {
+        &s[s.len() - 17..]
+    } else {
+        s
     }
 }
