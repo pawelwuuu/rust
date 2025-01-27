@@ -6,7 +6,7 @@ use crate::imgUtils::remove_metadata::remove_metadata;
 use eframe::epaint::TextureHandle;
 use image::{DynamicImage, ImageFormat};
 use std::collections::HashMap;
-use std::fs::File;
+use std::fs::{remove_file, File};
 use std::io::Read;
 use std::path::Path;
 use std::sync::Arc;
@@ -75,6 +75,35 @@ impl MyApp {
         }
 
         self.status_message = Some("Obrazy zostały skompresowane do docelowego rozmiaru.".to_string());
+    }
+
+    fn remove_duplicates(&mut self) {
+        if let Some(duplicates) = &self.duplicates {
+            let mut message : String = String::new();
+            for group in duplicates.iter() {
+
+                for (index, filename) in group.iter().enumerate() {
+                    if index == 0 {
+                        continue;
+                    }
+
+                    self.loaded_images.remove(filename);
+                    self.thumbnails.remove(filename);
+                    self.folder_files.remove(filename);
+                    self.selected_images.remove(filename);
+
+                    if remove_file(filename).is_err() {
+                        message += &*(String::from("Nie można usunąć pliku: ") + filename + "\n");
+                    }
+                }
+            }
+
+            if message.is_empty() {
+                message = "Pomyślnie usunięto duplikaty.".to_string();
+                self.duplicates = None;
+            }
+            self.status_message = Option::from(message);
+        }
     }
 
     fn select_all(&mut self) {
@@ -174,7 +203,6 @@ impl MyApp {
             if self.selected_images[filename] {
                 if let Err(e) = apply_grayscale(filename, filename) {
                     self.status_message = Some(format!("Błąd podczas nadawania skali szarości obrazowi {}: {}", filename, e));
-                    return;
                 }
             }
         }
@@ -332,18 +360,22 @@ impl eframe::App for MyApp {
                     });
                 }
 
-                if ui.button("Zamknij").clicked() {
-                    self.duplicates = None;
-                }
+                ui.horizontal(|ui| {
+                    if ui.button("Zamknij").clicked() {
+                        self.duplicates = None;
+                    }
+                    if ui.button("Usuń duplikaty").clicked() {
+                        self.remove_duplicates();
+                    }
+                });
             }
 
             self.create_thumbnails(ctx, 100, 100);
 
             ui.horizontal_wrapped(|ui| {
                 for (filename, texture_id) in &self.thumbnails {
-                    ui.image(texture_id);
-
                     ui.vertical(|ui| {
+                        ui.image(texture_id);
                         ui.label(Path::new(filename).file_name().unwrap().to_str().unwrap());
                         if (ui.checkbox( &mut self.selected_images[filename].clone(), "Zaznacz").clicked()) {
                             self.selected_images.insert(filename.clone(), !self.selected_images[filename]);

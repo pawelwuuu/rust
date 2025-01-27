@@ -4,7 +4,7 @@ use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::io::{self, Read};
 
-const IMAGE_EXTENSIONS: [&str; 3] = [".png", ".jpg", ".jpeg"];
+const IMAGE_EXTENSIONS: [&str; 7] = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".tif"];
 
 fn get_file_paths_from_folder(path: &str) -> Result<Vec<PathBuf>, io::Error> {
     let mut file_paths = Vec::new();
