@@ -277,7 +277,7 @@ impl Default for MyApp {
             status_message: None,
             resize_height: String::new(),
             resize_target: String::new(),
-            folder_path: String::from("/home/pawe-wojcik/img"),
+            folder_path: String::from("/home/"),
             folder_files: HashMap::new(),
             loaded_images: HashMap::new(),
             selected_images: HashMap::new(),
