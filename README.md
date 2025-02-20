@@ -1,19 +1,49 @@
-Mój projekt oferuje możliwość:
-zmniejszania wybranych obrazów do danego rozmiaru podanego w MB lub podanego w pikselach width x height
-zmniejszanie rozmiaru w mb działa najlepiej dla formatu jpg oraz png, jeśli nie jest możliwe osiągniecie danego rozmiaru zmniejsza do najmniejszego mozliwego starajac sie jak najmniej utracic na jakosci
-Nadanie obrazowi skali szarości czyli zapisanie w formacie luma8, bez formatu gif
-usuniecie metadaty z wybranych plików
-wyszukiwanie duplikatów
-usuwanie duplikatów
+# Image Optimization and Modification Tool
 
-program akceptuje pliki gif, jpeg, jpg, png, bmp, tif, tiff
-program wczytuje dane z katalogu podanego w interfejsie uzytkownika
-aby wykonac operacje opisane wyzej najpierw nalezy zaznaczyc obrazy na których mają zostać wykonane operacje, następnie wybieramy daną opcje
+**Description:**
 
-program pracuje na plikach dostarczonych z danego folderu, oznacza to że skala szarości oraz inne efekty zostają nadane do oryginału,
-zaleca się prace na kopiach obrazów
+This program provides an easy way to optimize and modify images, offering a wide range of functions such as resizing, grayscale conversion, metadata removal, and duplicate search. The program supports popular image file formats and is easy to use thanks to its intuitive user interface.
 
-w folderze img znajdują sie przykladowe img do testów
+**Features:**
 
-uruchomienie programu: cargo run
+* **Image Resizing:**
+    * Ability to reduce the image to a specified size in megabytes (MB) or pixels (width x height).
+    * MB size optimization works best for JPG and PNG formats.
+    * If it is not possible to achieve the desired size, the program reduces the image to the smallest possible size, trying to maintain as much quality as possible.
+* **Grayscale Conversion:**
+    * Converts the image to grayscale (Luma8 format).
+    * Function not available for GIF format.
+* **Metadata Removal:**
+    * Ability to remove metadata from selected files.
+* **Duplicate Search:**
+    * Function to search for duplicate images in the selected folder.
+* **Duplicate Removal:**
+    * Ability to remove found duplicate images.
 
+**Supported Formats:**
+
+GIF, JPEG, JPG, PNG, BMP, TIF, TIFF
+
+**How to Use:**
+
+1. Run the program.
+2. Select the folder where the images are located.
+3. Select the images on which you want to perform operations.
+4. Select the desired option from the menu.
+
+**Notes:**
+
+* The program works on files located in the selected folder, which means that the original files are modified. It is recommended to work on copies of images.
+* The "img" folder contains sample images for testing.
+
+**Running the Program:**
+
+To run the program, use the command:
+cargo run
+
+**Additional Information:**
+
+* The program was written in Rust.
+* In case of problems or questions, please contact us.
+
+We hope that this documentation is clear and helpful. If you have any further questions, please do not hesitate to ask.
